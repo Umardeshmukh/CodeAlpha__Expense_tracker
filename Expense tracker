@@ -1,0 +1,62 @@
+class ExpenseTracker:
+    def __init__(self):
+        self.expenses = {}
+
+    def add_expense(self, category, amount):
+        if category in self.expenses:
+            self.expenses[category].append(amount)
+        else:
+            self.expenses[category] = [amount]
+
+    def get_total_expenses(self):
+        total_expenses = 0
+        for category in self.expenses.values():
+            total_expenses += sum(category)
+        return total_expenses
+
+    def get_category_summary(self):
+        category_summary = {}
+        for category, expenses in self.expenses.items():
+            category_summary[category] = sum(expenses)
+        return category_summary
+
+    def get_insights(self):
+        total_expenses = self.get_total_expenses()
+        category_summary = self.get_category_summary()
+        insights = {
+            'Total Expenses': total_expenses,
+            'Category Summary': category_summary
+        }
+        return insights
+
+# Function to get user input for expenses
+def get_user_input():
+    while True:
+        category = input("Enter the category of the expense (e.g., Food, Transportation, Utilities), or 'done' to finish: ")
+        if category.lower() == 'done':
+            break
+        try:
+            amount = float(input("Enter the amount of the expense: "))
+        except ValueError:
+            print("Invalid amount. Please enter a valid number.")
+            continue
+        yield category, amount
+
+# Example usage:
+tracker = ExpenseTracker()
+
+# Getting user input for expenses
+user_input = get_user_input()
+print("Enter expenses. Type 'done' when finished.")
+try:
+    while True:
+        category, amount = next(user_input)
+        tracker.add_expense(category, amount)
+        print("Expense added successfully.")
+except StopIteration:
+    pass
+
+# Getting insights and summaries
+print("\nTotal Expenses:", tracker.get_total_expenses())
+print("Category Summary:", tracker.get_category_summary())
+print("Insights:", tracker.get_insights())
